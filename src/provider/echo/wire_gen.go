@@ -14,6 +14,7 @@ import (
 	"github.com/pt-suzuki/auto_transcription/src/domains/uploader"
 	"github.com/pt-suzuki/auto_transcription/src/handler"
 	"github.com/pt-suzuki/auto_transcription/src/middleware"
+	converter3 "github.com/pt-suzuki/auto_transcription/src/middleware/converter"
 )
 
 // Injectors from wire.go:
@@ -32,6 +33,9 @@ func Wire(fireStoreClient *firestore.Client, fireStorageClient *storage.Client, 
 	convertSpeechToTextResponder := converter2.NewConvertSpeechToTextResponder()
 	convertSpeechToTextAction := converter2.NewConvertSpeechToTextAction(speechToTextUseCase, speechToTextTranslator, convertSpeechToTextResponder)
 	firebaseTokenVerifiedMiddleware := middleware.NewFirebaseTokenVerifiedMiddleware(firebaseAuthClient)
-	provider := NewProvider(convertSpeechToTextAction, firebaseTokenVerifiedMiddleware)
+	convertSpeechToTextValidatorMiddleware := converter3.NewConvertSpeechToTextValidatorMiddleware(speechToTextTranslator)
+	converterMiddlewareProvider := NewConverterMiddlewareProvider(convertSpeechToTextValidatorMiddleware)
+	middlewareProvider := NewMiddlewareProvider(firebaseTokenVerifiedMiddleware, converterMiddlewareProvider)
+	provider := NewProvider(convertSpeechToTextAction, middlewareProvider)
 	return provider
 }

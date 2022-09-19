@@ -1,4 +1,4 @@
-package echo
+package router
 
 import (
 	echo2 "github.com/labstack/echo"
