@@ -1,3 +1,5 @@
 key/serviceAccount.json
 dir
 *.log
+.idea
+.env
