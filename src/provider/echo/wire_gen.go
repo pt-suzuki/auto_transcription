@@ -7,16 +7,18 @@ package echo
 
 import (
 	"cloud.google.com/go/firestore"
+	"firebase.google.com/go/auth"
 	"firebase.google.com/go/storage"
 	converter2 "github.com/pt-suzuki/auto_transcription/src/controllers/echo/converter"
 	"github.com/pt-suzuki/auto_transcription/src/domains/converter"
 	"github.com/pt-suzuki/auto_transcription/src/domains/uploader"
 	"github.com/pt-suzuki/auto_transcription/src/handler"
+	"github.com/pt-suzuki/auto_transcription/src/middleware"
 )
 
 // Injectors from wire.go:
 
-func Wire(fireStoreClient *firestore.Client, fireStorageClient *storage.Client) *Provider {
+func Wire(fireStoreClient *firestore.Client, fireStorageClient *storage.Client, firebaseAuthClient *auth.Client) *Provider {
 	convertResultTranslator := converter.NewConvertResultTranslator()
 	convertResultRepository := converter.NewConvertResultRepository(fireStoreClient, convertResultTranslator)
 	convertResultUseCase := converter.NewConvertResultUseCase(convertResultRepository)
@@ -29,6 +31,7 @@ func Wire(fireStoreClient *firestore.Client, fireStorageClient *storage.Client) 
 	speechToTextUseCase := converter.NewSpeechToTextUseCase(convertResultUseCase, speechToTextTranslator, useCase, speechToTextRepository)
 	convertSpeechToTextResponder := converter2.NewConvertSpeechToTextResponder()
 	convertSpeechToTextAction := converter2.NewConvertSpeechToTextAction(speechToTextUseCase, speechToTextTranslator, convertSpeechToTextResponder)
-	provider := NewProvider(convertSpeechToTextAction)
+	firebaseTokenVerifiedMiddleware := middleware.NewFirebaseTokenVerifiedMiddleware(firebaseAuthClient)
+	provider := NewProvider(convertSpeechToTextAction, firebaseTokenVerifiedMiddleware)
 	return provider
 }

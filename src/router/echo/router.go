@@ -9,8 +9,10 @@ import (
 func GetRouter(provider *echo.Provider) *echo2.Echo {
 	e := echo2.New()
 
+	ftvMiddleware := provider.FirebaseTokenVerifiedMiddleware.GetFirebaseTokenVerifiedMiddleware()
+
 	api := e.Group("/api")
-	api.POST("/converter/speech", provider.ConvertSpeechToTextAction.Invoke())
+	api.POST("/converter/speech", provider.ConvertSpeechToTextAction.Invoke(), ftvMiddleware)
 
 	return e
 }
