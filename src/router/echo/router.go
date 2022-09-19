@@ -10,7 +10,7 @@ func GetRouter(provider *echo.Provider) *echo2.Echo {
 	e := echo2.New()
 
 	api := e.Group("/api")
-	api.GET("/", provider.ConvertSpeechToTextAction.Invoke())
+	api.POST("/converter/speech", provider.ConvertSpeechToTextAction.Invoke())
 
 	return e
 }
