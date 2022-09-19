@@ -10,6 +10,7 @@ import (
 	"github.com/pt-suzuki/auto_transcription/config"
 	"io"
 	"log"
+	"time"
 )
 
 type Repository interface {
@@ -42,7 +43,10 @@ func (r *repository) Upload(content *UploadFile) (string, error) {
 
 	conf := config.NewConfig()
 	ctx := context.Background()
-	path := fmt.Sprintf("%s/%s/%s", conf.StorageRoot, content.Type, content.FileName)
+	date := time.Now()
+	strMonth := date.Format("200601")
+	strDate := date.Format("20060102")
+	path := fmt.Sprintf("%s/%s/%s/%s/%s", conf.StorageRoot, content.Type, strMonth, strDate, content.FileName)
 
 	object := bucket.Object(path)
 	writer := object.NewWriter(ctx)
@@ -56,7 +60,7 @@ func (r *repository) Upload(content *UploadFile) (string, error) {
 		log.Fatalf("file create error:%v", err)
 		return "", err
 	}
-	
+
 	if err := object.ACL().Set(context.Background(), storage2.AllUsers, storage2.RoleReader); err != nil {
 		log.Fatalf("set acl error:%v", err)
 		return "", err

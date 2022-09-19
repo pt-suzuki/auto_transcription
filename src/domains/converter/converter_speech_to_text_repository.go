@@ -39,7 +39,6 @@ func (r *speechToTextRepository) Convert(criteria *SpeechToTextCriteria) ([]stri
 	conf := config.NewConfig()
 	path := fmt.Sprintf("gs://%s/%s", conf.StorageBucket, criteria.FileURI)
 
-	println(path)
 	// Detects speech in the audio file
 	resp, err := client.Recognize(ctx, &speechpb.RecognizeRequest{
 		Config: &speechpb.RecognitionConfig{

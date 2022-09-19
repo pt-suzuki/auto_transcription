@@ -4,6 +4,7 @@ import (
 	"github.com/pt-suzuki/auto_transcription/src/handler"
 	"github.com/pt-suzuki/auto_transcription/src/provider/test"
 	"log"
+	"time"
 
 	"github.com/pt-suzuki/auto_transcription/infrastructure/firestorage"
 	"github.com/stretchr/testify/assert"
@@ -25,7 +26,10 @@ func TestRepository_Upload(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			assert.Equal(t, filePath, "auto_transcription/speech/sea_test2.jpg")
+			date := time.Now()
+			strMonth := date.Format("200601")
+			strDate := date.Format("20060102")
+			assert.Equal(t, filePath, "auto_transcription/speech/"+strMonth+"/"+strDate+"/sea_test2.jpg")
 		})
 	})
 }
