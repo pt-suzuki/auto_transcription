@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	echo := server.CreateEcho()
+	echo := server.CreateLocalEcho()
 
 	echo.Use(middleware.Logger())
 	echo.Use(middleware.Recover())
