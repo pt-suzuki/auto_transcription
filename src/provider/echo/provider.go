@@ -1,20 +1,21 @@
 package echo
 
 import (
-	"github.com/pt-suzuki/auto_transcription/src/controllers/echo/converter"
+	"github.com/pt-suzuki/auto_transcription/src/provider/echo/controllers"
+	"github.com/pt-suzuki/auto_transcription/src/provider/echo/middlewares"
 )
 
 type Provider struct {
-	ConvertSpeechToTextAction converter.ConvertSpeechToTextAction
-	MiddlewareProvider        *MiddlewareProvider
+	ControllerProvider *controllers.ControllerProvider
+	MiddlewareProvider *middlewares.MiddlewareProvider
 }
 
 func NewProvider(
-	convertSpeechToTextAction converter.ConvertSpeechToTextAction,
-	middlewareProvider *MiddlewareProvider,
+	controllerProvider *controllers.ControllerProvider,
+	middlewareProvider *middlewares.MiddlewareProvider,
 ) *Provider {
 	return &Provider{
-		convertSpeechToTextAction,
+		controllerProvider,
 		middlewareProvider,
 	}
 }

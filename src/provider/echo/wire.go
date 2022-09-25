@@ -15,6 +15,8 @@ import (
 	"github.com/pt-suzuki/auto_transcription/src/handler"
 	"github.com/pt-suzuki/auto_transcription/src/middleware"
 	converter3 "github.com/pt-suzuki/auto_transcription/src/middleware/converter"
+	"github.com/pt-suzuki/auto_transcription/src/provider/echo/controllers"
+	middleware2 "github.com/pt-suzuki/auto_transcription/src/provider/echo/middlewares"
 )
 
 func Wire(fireStoreClient *firestore.Client, fireStorageClient *storage.Client, firebaseAuthClient *auth.Client) *Provider {
@@ -30,11 +32,15 @@ func Wire(fireStoreClient *firestore.Client, fireStorageClient *storage.Client, 
 		convert_result.NewConvertResultTranslator,
 		convert_result.NewRepository,
 		convert_result.NewUseCase,
-		converter.NewConvertSpeechToTextResponder,
-		converter.NewConvertSpeechToTextAction,
+		converter.NewConvertSpeechToTextUploadFileResponder,
+		converter.NewConvertSpeechToTextUploadFileAction,
+		converter.NewConvertSpeechToTextByUploadFileIDResponder,
+		converter.NewConvertSpeechToTextByUploadFileIDAction,
 		converter3.NewConvertSpeechToTextValidatorMiddleware,
-		NewConverterMiddlewareProvider,
-		NewMiddlewareProvider,
+		controllers.NewConverterMiddlewareProvider,
+		controllers.NewControllerProvider,
+		middleware2.NewConverterMiddlewareProvider,
+		middleware2.NewMiddlewareProvider,
 		NewProvider,
 	)
 	return &Provider{}

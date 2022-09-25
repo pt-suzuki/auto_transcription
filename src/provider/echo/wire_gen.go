@@ -16,6 +16,8 @@ import (
 	"github.com/pt-suzuki/auto_transcription/src/handler"
 	"github.com/pt-suzuki/auto_transcription/src/middleware"
 	converter3 "github.com/pt-suzuki/auto_transcription/src/middleware/converter"
+	"github.com/pt-suzuki/auto_transcription/src/provider/echo/controllers"
+	"github.com/pt-suzuki/auto_transcription/src/provider/echo/middlewares"
 )
 
 // Injectors from wire.go:
@@ -31,12 +33,16 @@ func Wire(fireStoreClient *firestore.Client, fireStorageClient *storage.Client, 
 	uploaderUseCase := uploader.NewUseCase(uploaderRepository, useCase)
 	speechToTextRepository := converter.NewSpeechToTextRepository(speechToTextTranslator)
 	speechToTextUseCase := converter.NewSpeechToTextUseCase(useCase, speechToTextTranslator, uploaderUseCase, speechToTextRepository)
-	convertSpeechToTextResponder := converter2.NewConvertSpeechToTextResponder()
-	convertSpeechToTextAction := converter2.NewConvertSpeechToTextAction(speechToTextUseCase, speechToTextTranslator, convertSpeechToTextResponder)
+	convertSpeechToTextUploadFileResponder := converter2.NewConvertSpeechToTextUploadFileResponder()
+	convertSpeechToTextUploadFileAction := converter2.NewConvertSpeechToTextUploadFileAction(speechToTextUseCase, speechToTextTranslator, convertSpeechToTextUploadFileResponder)
+	convertSpeechToTextByUploadFileIDResponder := converter2.NewConvertSpeechToTextByUploadFileIDResponder()
+	convertSpeechToTextByUploadFileIDAction := converter2.NewConvertSpeechToTextByUploadFileIDAction(speechToTextUseCase, speechToTextTranslator, convertSpeechToTextByUploadFileIDResponder)
+	converterControllerProvider := controllers.NewConverterMiddlewareProvider(convertSpeechToTextUploadFileAction, convertSpeechToTextByUploadFileIDAction)
+	controllerProvider := controllers.NewControllerProvider(converterControllerProvider)
 	firebaseTokenVerifiedMiddleware := middleware.NewFirebaseTokenVerifiedMiddleware(firebaseAuthClient)
 	convertSpeechToTextValidatorMiddleware := converter3.NewConvertSpeechToTextValidatorMiddleware(speechToTextTranslator)
-	converterMiddlewareProvider := NewConverterMiddlewareProvider(convertSpeechToTextValidatorMiddleware)
-	middlewareProvider := NewMiddlewareProvider(firebaseTokenVerifiedMiddleware, converterMiddlewareProvider)
-	provider := NewProvider(convertSpeechToTextAction, middlewareProvider)
+	converterMiddlewareProvider := middlewares.NewConverterMiddlewareProvider(convertSpeechToTextValidatorMiddleware)
+	middlewareProvider := middlewares.NewMiddlewareProvider(firebaseTokenVerifiedMiddleware, converterMiddlewareProvider)
+	provider := NewProvider(controllerProvider, middlewareProvider)
 	return provider
 }
