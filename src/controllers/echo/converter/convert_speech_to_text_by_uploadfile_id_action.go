@@ -5,25 +5,25 @@ import (
 	"github.com/pt-suzuki/auto_transcription/src/domains/converter"
 )
 
-type ConvertSpeechToTextUploadFileAction interface {
+type ConvertSpeechToTextByUploadFileIDAction interface {
 	Invoke() echo.HandlerFunc
 }
 
-type convertSpeechToTextUploadFileAction struct {
+type convertSpeechToTextByUploadFileIDAction struct {
 	useCase    converter.SpeechToTextUseCase
 	translator converter.SpeechToTextTranslator
-	responder  ConvertSpeechToTextResponder
+	responder  ConvertSpeechToTextByUploadFileIDResponder
 }
 
-func NewConvertSpeechToTextUploadFileAction(
+func NewConvertSpeechToTextByUploadFileIDAction(
 	useCase converter.SpeechToTextUseCase,
 	translator converter.SpeechToTextTranslator,
-	responder ConvertSpeechToTextResponder,
-) ConvertSpeechToTextAction {
-	return &convertSpeechToTextUploadFileAction{useCase, translator, responder}
+	responder ConvertSpeechToTextByUploadFileIDResponder,
+) ConvertSpeechToTextByUploadFileIDAction {
+	return &convertSpeechToTextByUploadFileIDAction{useCase, translator, responder}
 }
 
-func (a *convertSpeechToTextUploadFileAction) Invoke() echo.HandlerFunc {
+func (a *convertSpeechToTextByUploadFileIDAction) Invoke() echo.HandlerFunc {
 	return func(context echo.Context) error {
 		id := a.translator.EchoContextToId(context)
 		result, err := a.useCase.ConvertByUploadFileId(id)

@@ -5,18 +5,18 @@ import (
 	"net/http"
 )
 
-type ConvertSpeechToTextUploadFileResponder interface {
+type ConvertSpeechToTextByUploadFileIDResponder interface {
 	Invoke(context echo.Context, content []string, err error) error
 }
 
-type convertSpeechToTextUploadFileResponder struct {
+type convertSpeechToTextByUploadFileIDResponder struct {
 }
 
-func NewConvertSpeechToTextUploadFileResponder() ConvertSpeechToTextResponder {
-	return &convertSpeechToTextUploadFileResponder{}
+func NewConvertSpeechToTextByUploadFileIDResponder() ConvertSpeechToTextByUploadFileIDResponder {
+	return &convertSpeechToTextByUploadFileIDResponder{}
 }
 
-func (*convertSpeechToTextUploadFileResponder) Invoke(context echo.Context, content []string, err error) error {
+func (*convertSpeechToTextByUploadFileIDResponder) Invoke(context echo.Context, content []string, err error) error {
 	if err != nil {
 		return context.JSON(http.StatusBadRequest, []interface{}{"bad request"})
 	}

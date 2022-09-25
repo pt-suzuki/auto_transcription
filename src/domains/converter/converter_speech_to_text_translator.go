@@ -12,6 +12,7 @@ type SpeechToTextTranslator interface {
 	EchoContextToCriteria(context echo.Context) (*SpeechToTextCriteria, error)
 	RecognizeResponseToClauseList(resp *speech.RecognizeResponse) []string
 	CriteriaToUploadFile(criteria *SpeechToTextCriteria) *uploader.UploadFile
+	EchoContextToId(context echo.Context) string
 }
 
 type speechToTextTranslator struct {
@@ -55,4 +56,8 @@ func (*speechToTextTranslator) RecognizeResponseToClauseList(resp *speech.Recogn
 		}
 	}
 	return result
+}
+
+func (*speechToTextTranslator) EchoContextToId(context echo.Context) string {
+	return context.Param("upload_file_id")
 }
