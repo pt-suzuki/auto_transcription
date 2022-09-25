@@ -1,7 +1,8 @@
 package converter
 
 type SpeechToTextCriteria struct {
-	Data     string `json:"data"`
-	FileName string `json:"fileName"`
-	FileURI  string `json:"fileUri"`
+	Data         string `json:"data"`
+	FileName     string `json:"fileName"`
+	FilePath     string `json:"filePath"`
+	UploadFileID string `json:"uploadFileID"`
 }

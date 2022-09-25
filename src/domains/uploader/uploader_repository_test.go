@@ -1,6 +1,7 @@
 package uploader
 
 import (
+	firestore2 "github.com/pt-suzuki/auto_transcription/infrastructure/firestore"
 	"github.com/pt-suzuki/auto_transcription/src/handler"
 	"github.com/pt-suzuki/auto_transcription/src/provider/test"
 	"log"
@@ -54,6 +55,7 @@ func ProviderRepository() (Repository, error) {
 		return nil, err
 	}
 	translator := ProviderTranslator()
-	client := firestorage.GetLocalClient()
-	return NewRepository(client, translator), nil
+	storageClient := firestorage.GetLocalClient()
+	firestoreClient := firestore2.GetLocalClient()
+	return NewRepository(firestoreClient, storageClient, translator), nil
 }

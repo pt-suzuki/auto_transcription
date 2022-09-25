@@ -1,10 +1,10 @@
-package converter
+package convert_result
 
 import "time"
 
 type ConvertResult struct {
 	ID            string
-	FilePath      string
+	UploadFileID  string
 	ConvertResult []string
 	CreatedAt     time.Time
 }

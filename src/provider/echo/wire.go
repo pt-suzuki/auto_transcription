@@ -9,6 +9,7 @@ import (
 	"firebase.google.com/go/storage"
 	"github.com/google/wire"
 	"github.com/pt-suzuki/auto_transcription/src/controllers/echo/converter"
+	"github.com/pt-suzuki/auto_transcription/src/domains/convert_result"
 	converter2 "github.com/pt-suzuki/auto_transcription/src/domains/converter"
 	"github.com/pt-suzuki/auto_transcription/src/domains/uploader"
 	"github.com/pt-suzuki/auto_transcription/src/handler"
@@ -26,9 +27,9 @@ func Wire(fireStoreClient *firestore.Client, fireStorageClient *storage.Client, 
 		converter2.NewSpeechToTextTranslator,
 		converter2.NewSpeechToTextRepository,
 		converter2.NewSpeechToTextUseCase,
-		converter2.NewConvertResultTranslator,
-		converter2.NewConvertResultRepository,
-		converter2.NewConvertResultUseCase,
+		convert_result.NewConvertResultTranslator,
+		convert_result.NewRepository,
+		convert_result.NewUseCase,
 		converter.NewConvertSpeechToTextResponder,
 		converter.NewConvertSpeechToTextAction,
 		converter3.NewConvertSpeechToTextValidatorMiddleware,

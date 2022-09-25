@@ -1,7 +1,9 @@
 package uploader
 
 type UploadFile struct {
+	ID       string
 	FileName string
+	FilePath string
 	Data     string
 	Type     BucketType
 }

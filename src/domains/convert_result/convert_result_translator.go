@@ -1,4 +1,4 @@
-package converter
+package convert_result
 
 import (
 	firestore2 "cloud.google.com/go/firestore"
@@ -6,7 +6,7 @@ import (
 	"log"
 )
 
-type ConvertResultTranslator interface {
+type Translator interface {
 	ContentToMap(item *ConvertResult) map[string]interface{}
 	IteratorToList(ite *firestore2.DocumentIterator) []*ConvertResult
 	DocumentSnapshotToContent(doc *firestore2.DocumentSnapshot) *ConvertResult
@@ -15,14 +15,14 @@ type ConvertResultTranslator interface {
 type convertResultTranslator struct {
 }
 
-func NewConvertResultTranslator() ConvertResultTranslator {
+func NewConvertResultTranslator() Translator {
 	return &convertResultTranslator{}
 }
 
 func (t *convertResultTranslator) ContentToMap(item *ConvertResult) map[string]interface{} {
 	m := make(map[string]interface{})
 
-	m["FilePath"] = item.FilePath
+	m["UploadFileID"] = item.UploadFileID
 	m["ConvertResult"] = item.ConvertResult
 
 	return m
@@ -54,8 +54,8 @@ func (t *convertResultTranslator) DocumentSnapshotToContent(doc *firestore2.Docu
 			content.ConvertResult = append(content.ConvertResult, item.(string))
 		}
 	}
-	if data["FilePath"] != nil {
-		content.FilePath = data["FilePath"].(string)
+	if data["UploadFileID"] != nil {
+		content.UploadFileID = data["UploadFileID"].(string)
 	}
 	return content
 }

@@ -10,6 +10,7 @@ import (
 	"firebase.google.com/go/auth"
 	"firebase.google.com/go/storage"
 	converter2 "github.com/pt-suzuki/auto_transcription/src/controllers/echo/converter"
+	"github.com/pt-suzuki/auto_transcription/src/domains/convert_result"
 	"github.com/pt-suzuki/auto_transcription/src/domains/converter"
 	"github.com/pt-suzuki/auto_transcription/src/domains/uploader"
 	"github.com/pt-suzuki/auto_transcription/src/handler"
@@ -20,16 +21,16 @@ import (
 // Injectors from wire.go:
 
 func Wire(fireStoreClient *firestore.Client, fireStorageClient *storage.Client, firebaseAuthClient *auth.Client) *Provider {
-	convertResultTranslator := converter.NewConvertResultTranslator()
-	convertResultRepository := converter.NewConvertResultRepository(fireStoreClient, convertResultTranslator)
-	convertResultUseCase := converter.NewConvertResultUseCase(convertResultRepository)
+	translator := convert_result.NewConvertResultTranslator()
+	repository := convert_result.NewRepository(fireStoreClient, translator)
+	useCase := convert_result.NewUseCase(repository)
 	responseHandler := handler.NewResponseHandler()
 	speechToTextTranslator := converter.NewSpeechToTextTranslator(responseHandler)
-	translator := uploader.NewTranslator()
-	repository := uploader.NewRepository(fireStorageClient, translator)
-	useCase := uploader.NewUseCase(repository)
+	uploaderTranslator := uploader.NewTranslator()
+	uploaderRepository := uploader.NewRepository(fireStoreClient, fireStorageClient, uploaderTranslator)
+	uploaderUseCase := uploader.NewUseCase(uploaderRepository, useCase)
 	speechToTextRepository := converter.NewSpeechToTextRepository(speechToTextTranslator)
-	speechToTextUseCase := converter.NewSpeechToTextUseCase(convertResultUseCase, speechToTextTranslator, useCase, speechToTextRepository)
+	speechToTextUseCase := converter.NewSpeechToTextUseCase(useCase, speechToTextTranslator, uploaderUseCase, speechToTextRepository)
 	convertSpeechToTextResponder := converter2.NewConvertSpeechToTextResponder()
 	convertSpeechToTextAction := converter2.NewConvertSpeechToTextAction(speechToTextUseCase, speechToTextTranslator, convertSpeechToTextResponder)
 	firebaseTokenVerifiedMiddleware := middleware.NewFirebaseTokenVerifiedMiddleware(firebaseAuthClient)

@@ -29,7 +29,7 @@ func (a *convertSpeechToTextAction) Invoke() echo.HandlerFunc {
 		if err != nil {
 			return a.responder.Invoke(context, nil, err)
 		}
-		result, err := a.useCase.Convert(criteria)
+		result, err := a.useCase.UploadAndConvert(criteria)
 		if err != nil {
 			return a.responder.Invoke(context, nil, err)
 		}

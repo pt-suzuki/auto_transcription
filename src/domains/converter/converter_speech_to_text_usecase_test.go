@@ -4,13 +4,15 @@ import (
 	firestore2 "cloud.google.com/go/firestore"
 	"github.com/pt-suzuki/auto_transcription/src/domains/uploader"
 	"github.com/pt-suzuki/auto_transcription/src/handler"
+	convert_result2 "github.com/pt-suzuki/auto_transcription/src/provider/test/convert_result"
 	uploader2 "github.com/pt-suzuki/auto_transcription/src/provider/test/uploader"
 	"testing"
 )
 
 func TestSpeechToTextUseCase_Convert(t *testing.T) {
 	/*
-		useCase, err := ProviderSpeechToTextUseCase()
+		client := firestore.GetLocalClient()
+		useCase, err := ProviderSpeechToTextUseCase(client)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -20,8 +22,12 @@ func TestSpeechToTextUseCase_Convert(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
+			criteria := &SpeechToTextCriteria{
+				FileName: content.FileName,
+				Data:     content.Data,
+			}
 
-			result, err := useCase.Convert(content)
+			result, err := useCase.UploadAndConvert(criteria)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -38,7 +44,7 @@ func ProviderSpeechToTextUseCase(client *firestore2.Client) (SpeechToTextUseCase
 	translator := ProviderSpeechToTextTranslator()
 	repository := ProviderSpeechToTextRepository()
 
-	convertResultUseCase := ProviderConvertResultUseCase(client)
+	convertResultUseCase := convert_result2.ProviderConvertResultUseCase(client)
 
 	return NewSpeechToTextUseCase(convertResultUseCase, translator, uploadUseCase, repository), nil
 }

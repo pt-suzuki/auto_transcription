@@ -1,11 +1,11 @@
-package converter
+package convert_result
 
 import (
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
-func TestConvertResultTranslator_ContentToMap(t *testing.T) {
+func TestTranslator_ContentToMap(t *testing.T) {
 	tl := ProviderConvertResultTranslator()
 	t.Run("値オブジェクトをマップに変換", func(t *testing.T) {
 		item := createConvertResult()
@@ -25,12 +25,12 @@ func TestConvertResultTranslator_ContentToMap(t *testing.T) {
 				assert.Equal(t, result["ConvertResult"].([]string)[1], "テスト2")
 			})
 		})
-		t.Run("ファイルパスが一致", func(t *testing.T) {
-			assert.Equal(t, result["FilePath"], "テストファイルパス")
+		t.Run("アップロードファイルが一致", func(t *testing.T) {
+			assert.Equal(t, result["UploadFileID"], "テストアップロードファイルID")
 		})
 	})
 }
 
-func ProviderConvertResultTranslator() ConvertResultTranslator {
+func ProviderConvertResultTranslator() Translator {
 	return NewConvertResultTranslator()
 }

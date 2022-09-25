@@ -1,7 +1,9 @@
 package uploader
 
 import (
+	firestore2 "github.com/pt-suzuki/auto_transcription/infrastructure/firestore"
 	"github.com/pt-suzuki/auto_transcription/src/provider/test"
+	"github.com/pt-suzuki/auto_transcription/src/provider/test/convert_result"
 	"log"
 
 	"github.com/pt-suzuki/auto_transcription/infrastructure/firestorage"
@@ -28,9 +30,10 @@ func ProvideUploaderRepository() (uploader.Repository, error) {
 		log.Fatalf("fail provide uploader translator: %v", err)
 		return nil, err
 	}
-	client := firestorage.GetLocalClient()
+	fireStorageClient := firestorage.GetLocalClient()
+	fireStoreClient := firestore2.GetLocalClient()
 
-	return uploader.NewRepository(client, translator), nil
+	return uploader.NewRepository(fireStoreClient, fireStorageClient, translator), nil
 }
 
 func ProvideUploaderUseCase() (uploader.UseCase, error) {
@@ -45,5 +48,8 @@ func ProvideUploaderUseCase() (uploader.UseCase, error) {
 		return nil, err
 	}
 
-	return uploader.NewUseCase(repository), nil
+	fireStoreClient := firestore2.GetLocalClient()
+	convertResultUseCase := convert_result.ProviderConvertResultUseCase(fireStoreClient)
+
+	return uploader.NewUseCase(repository, convertResultUseCase), nil
 }

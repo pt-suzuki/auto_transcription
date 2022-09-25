@@ -12,6 +12,7 @@ func GetRouter(provider *echo.Provider) *echo2.Echo {
 	ftvMiddleware := provider.MiddlewareProvider.FirebaseTokenVerifiedMiddleware.GetFirebaseTokenVerifiedMiddleware()
 
 	api := e.Group("/api")
+	api.POST("/upload/speech", provider.ConvertSpeechToTextAction.Invoke(), ftvMiddleware)
 	api.POST("/converter/speech", provider.ConvertSpeechToTextAction.Invoke(), ftvMiddleware)
 
 	return e

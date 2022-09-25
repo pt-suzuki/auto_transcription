@@ -1,4 +1,4 @@
-package converter
+package convert_result
 
 import (
 	firestore2 "cloud.google.com/go/firestore"
@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func TestConvertResultRepository_Save(t *testing.T) {
+func TestRepository_Save(t *testing.T) {
 	client := firestore.GetLocalClient()
 	r := ProviderConvertResultRepository(client)
 
@@ -42,16 +42,16 @@ func TestConvertResultRepository_Save(t *testing.T) {
 				assert.Equal(t, content.ConvertResult[1], "テスト2")
 			})
 		})
-		t.Run("ファイルパスが一致", func(t *testing.T) {
-			assert.Equal(t, content.FilePath, "テストファイルパス")
+		t.Run("アップロードファイルIDが一致", func(t *testing.T) {
+			assert.Equal(t, content.UploadFileID, "テストアップロードファイルID")
 		})
 	})
 }
 
 func createConvertResult() *ConvertResult {
 	return &ConvertResult{
-		ID:       "テストID",
-		FilePath: "テストファイルパス",
+		ID:           "テストID",
+		UploadFileID: "テストアップロードファイルID",
 		ConvertResult: []string{
 			"テスト1",
 			"テスト2",
@@ -60,9 +60,8 @@ func createConvertResult() *ConvertResult {
 	}
 }
 
-func ProviderConvertResultRepository(client *firestore2.Client) ConvertResultRepository {
-
+func ProviderConvertResultRepository(client *firestore2.Client) Repository {
 	translator := ProviderConvertResultTranslator()
 
-	return NewConvertResultRepository(client, translator)
+	return NewRepository(client, translator)
 }
