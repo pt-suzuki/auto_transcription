@@ -3,6 +3,7 @@ package converter
 import (
 	"encoding/base64"
 	"github.com/labstack/echo"
+
 	"github.com/pt-suzuki/auto_transcription/src/domains/converter"
 	"net/http"
 	"strings"

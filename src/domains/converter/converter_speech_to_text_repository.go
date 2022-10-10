@@ -29,7 +29,7 @@ func (r *speechToTextRepository) Convert(criteria *SpeechToTextCriteria) ([]stri
 
 	client, err := speech.NewClient(ctx)
 	if err != nil {
-		log.Fatalf("Failed to create client: %v", err)
+		log.Printf("Failed to create client: %v", err)
 		return nil, err
 	}
 	defer func() {
@@ -51,7 +51,7 @@ func (r *speechToTextRepository) Convert(criteria *SpeechToTextCriteria) ([]stri
 	})
 
 	if err != nil {
-		log.Fatalf("failed to recognize: %v", err)
+		log.Printf("failed to recognize: %v", err)
 		return nil, err
 	}
 

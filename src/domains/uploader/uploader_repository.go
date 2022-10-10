@@ -38,36 +38,33 @@ func NewRepository(firestoreClient *firestore.Client, storageClient *storage.Cli
 
 func (r *repository) Upload(content *UploadFile) (string, error) {
 	path := r.createPath(content)
-
-	bucket, err := r.storageClient.DefaultBucket()
+	conf := config.NewConfig()
+	bucket, err := r.storageClient.Bucket(conf.StorageBucket)
 	if err != nil {
-		log.Fatalf("get default bucket error:%v", err)
+		log.Printf("get default bucket error:%v", err)
 		return "", err
 	}
 	decoded, err := base64.StdEncoding.DecodeString(content.Data)
 	if err != nil {
-		log.Fatalf("decode error:%v", err)
+		log.Printf("decode error:%v", err)
 		return "", err
 	}
-
 	object := bucket.Object(path)
 
 	ctx := context.Background()
 	writer := object.NewWriter(ctx)
 	if _, err = io.Copy(writer, bytes.NewReader(decoded)); err != nil {
-		log.Fatalf("file copy error:%v", err)
+		log.Printf("file copy error:%v", err)
 		return "", err
 	}
 	if err := writer.Close(); err != nil {
-		log.Fatalf("file create error:%v", err)
+		log.Printf("file create error:%v", err)
 		return "", err
 	}
-
 	if err := object.ACL().Set(context.Background(), storage2.AllUsers, storage2.RoleReader); err != nil {
-		log.Fatalf("set acl error:%v", err)
+		log.Printf("set acl error:%v", err)
 		return "", err
 	}
-
 	return path, nil
 }
 
@@ -76,7 +73,7 @@ func (r *repository) Save(item *UploadFile) (*UploadFile, error) {
 
 	ref, _, err := r.firestoreClient.Collection(collectionName).Add(context.Background(), m)
 	if err != nil {
-		log.Fatalf("fail collection  %s save: %v", collectionName, err)
+		log.Printf("fail collection  %s save: %v", collectionName, err)
 		return nil, err
 	}
 	item.ID = ref.ID

@@ -8,7 +8,7 @@ import (
 )
 
 type SpeechToTextUseCase interface {
-	UploadAndConvert(criteria *SpeechToTextCriteria) ([]string, error)
+	UploadAndConvert(criteria *SpeechToTextCriteria) (*convert_result.ConvertResult, error)
 	ConvertByUploadFileId(id string) ([]string, error)
 	Convert(criteria *SpeechToTextCriteria) ([]string, error)
 }
@@ -34,7 +34,7 @@ func NewSpeechToTextUseCase(
 	}
 }
 
-func (u *speechToTextUseCase) UploadAndConvert(criteria *SpeechToTextCriteria) ([]string, error) {
+func (u *speechToTextUseCase) UploadAndConvert(criteria *SpeechToTextCriteria) (*convert_result.ConvertResult, error) {
 	content := u.translator.CriteriaToUploadFile(criteria)
 	uploadFile, err := u.uploaderUseCase.Upload(content)
 	if err != nil {
@@ -43,9 +43,12 @@ func (u *speechToTextUseCase) UploadAndConvert(criteria *SpeechToTextCriteria) (
 	criteria.FilePath = uploadFile.FilePath
 	criteria.UploadFileID = uploadFile.ID
 
-	result, err := u.Convert(criteria)
+	convertResult, err := u.Convert(criteria)
 	if err != nil {
 		return nil, err
+	}
+	result := &convert_result.ConvertResult{
+		Results: convertResult,
 	}
 	return result, nil
 }
@@ -73,9 +76,9 @@ func (u *speechToTextUseCase) Convert(criteria *SpeechToTextCriteria) ([]string,
 		return nil, err
 	}
 	convertResult := &convert_result.ConvertResult{
-		UploadFileID:  criteria.UploadFileID,
-		ConvertResult: result,
-		CreatedAt:     time.Now(),
+		UploadFileID: criteria.UploadFileID,
+		Results:      result,
+		CreatedAt:    time.Now(),
 	}
 	if _, err = u.convertResultUseCase.Save(convertResult); err != nil {
 		return nil, err

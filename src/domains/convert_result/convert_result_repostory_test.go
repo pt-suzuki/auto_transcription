@@ -33,13 +33,13 @@ func TestRepository_Save(t *testing.T) {
 		}
 		t.Run("変換結果が一致", func(t *testing.T) {
 			t.Run("件数が2件", func(t *testing.T) {
-				assert.Equal(t, len(content.ConvertResult), 2)
+				assert.Equal(t, len(content.Results), 2)
 			})
 			t.Run("1件目の値が一致", func(t *testing.T) {
-				assert.Equal(t, content.ConvertResult[0], "テスト1")
+				assert.Equal(t, content.Results[0], "テスト1")
 			})
 			t.Run("2件目の値が一致", func(t *testing.T) {
-				assert.Equal(t, content.ConvertResult[1], "テスト2")
+				assert.Equal(t, content.Results[1], "テスト2")
 			})
 		})
 		t.Run("アップロードファイルIDが一致", func(t *testing.T) {
@@ -52,7 +52,7 @@ func createConvertResult() *ConvertResult {
 	return &ConvertResult{
 		ID:           "テストID",
 		UploadFileID: "テストアップロードファイルID",
-		ConvertResult: []string{
+		Results: []string{
 			"テスト1",
 			"テスト2",
 		},

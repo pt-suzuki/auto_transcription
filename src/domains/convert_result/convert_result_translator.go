@@ -23,7 +23,7 @@ func (t *convertResultTranslator) ContentToMap(item *ConvertResult) map[string]i
 	m := make(map[string]interface{})
 
 	m["UploadFileID"] = item.UploadFileID
-	m["ConvertResult"] = item.ConvertResult
+	m["Results"] = item.Results
 
 	return m
 }
@@ -49,9 +49,9 @@ func (t *convertResultTranslator) DocumentSnapshotToContent(doc *firestore2.Docu
 	data := doc.Data()
 
 	content.ID = doc.Ref.ID
-	if data["ConvertResult"] != nil {
-		for _, item := range data["ConvertResult"].([]interface{}) {
-			content.ConvertResult = append(content.ConvertResult, item.(string))
+	if data["Results"] != nil {
+		for _, item := range data["Results"].([]interface{}) {
+			content.Results = append(content.Results, item.(string))
 		}
 	}
 	if data["UploadFileID"] != nil {

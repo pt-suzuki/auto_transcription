@@ -2,11 +2,12 @@ package converter
 
 import (
 	"github.com/labstack/echo"
+	"github.com/pt-suzuki/auto_transcription/src/domains/convert_result"
 	"net/http"
 )
 
 type ConvertSpeechToTextUploadFileResponder interface {
-	Invoke(context echo.Context, content []string, err error) error
+	Invoke(context echo.Context, content *convert_result.ConvertResult, err error) error
 }
 
 type convertSpeechToTextUploadFileResponder struct {
@@ -16,9 +17,9 @@ func NewConvertSpeechToTextUploadFileResponder() ConvertSpeechToTextUploadFileRe
 	return &convertSpeechToTextUploadFileResponder{}
 }
 
-func (*convertSpeechToTextUploadFileResponder) Invoke(context echo.Context, content []string, err error) error {
+func (*convertSpeechToTextUploadFileResponder) Invoke(context echo.Context, content *convert_result.ConvertResult, err error) error {
 	if err != nil {
-		return context.JSON(http.StatusBadRequest, []interface{}{"bad request"})
+		return context.JSON(http.StatusBadRequest, []interface{}{"bad request:" + err.Error()})
 	}
 	return context.JSON(http.StatusOK, content)
 }
