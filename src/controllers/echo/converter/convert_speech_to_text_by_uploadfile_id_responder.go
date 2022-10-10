@@ -18,7 +18,7 @@ func NewConvertSpeechToTextByUploadFileIDResponder() ConvertSpeechToTextByUpload
 
 func (*convertSpeechToTextByUploadFileIDResponder) Invoke(context echo.Context, content []string, err error) error {
 	if err != nil {
-		return context.JSON(http.StatusBadRequest, []interface{}{"bad request:" + err.Error()})
+		return context.JSON(http.StatusBadRequest, []interface{}{"Internal Error"})
 	}
 	return context.JSON(http.StatusOK, content)
 }
