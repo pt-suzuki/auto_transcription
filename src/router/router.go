@@ -9,15 +9,17 @@ import (
 func GetRouter(provider *echo.Provider) *echo2.Echo {
 	e := echo2.New()
 
-	ftvMiddleware := provider.MiddlewareProvider.FirebaseTokenVerifiedMiddleware.GetFirebaseTokenVerifiedMiddleware()
+	// ftvMiddleware := provider.MiddlewareProvider.FirebaseTokenVerifiedMiddleware.GetFirebaseTokenVerifiedMiddleware()
 
 	api := e.Group("/api")
 	api.POST("/converter/speech",
 		provider.ControllerProvider.ConverterControllerProvider.ConvertSpeechToTextUploadFileAction.Invoke(),
-		ftvMiddleware)
+		//ftvMiddleware)
+	)
 	api.POST("/converter/speech/:upload_file_id",
 		provider.ControllerProvider.ConverterControllerProvider.ConvertSpeechToTextByUploadFileIDAction.Invoke(),
-		ftvMiddleware)
+		//ftvMiddleware)
+	)
 
 	return e
 }

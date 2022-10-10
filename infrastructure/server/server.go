@@ -3,6 +3,7 @@ package server
 import (
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
+	"github.com/pt-suzuki/auto_transcription/infrastructure/firebase_admin"
 	"github.com/pt-suzuki/auto_transcription/infrastructure/firestorage"
 	"github.com/pt-suzuki/auto_transcription/infrastructure/firestore"
 	echo2 "github.com/pt-suzuki/auto_transcription/src/provider/echo"
@@ -12,8 +13,9 @@ import (
 func CreateEcho() *echo.Echo {
 	fireStoreClient := firestore.GetClient()
 	fireStorageClient := firestorage.GetClient()
+	firebaseAuthClient := firebase_admin.GetFirebaseAdminClient()
 
-	serviceProvider := echo2.Wire(fireStoreClient, fireStorageClient)
+	serviceProvider := echo2.Wire(fireStoreClient, fireStorageClient, firebaseAuthClient)
 
 	e := echo3.GetRouter(serviceProvider)
 
